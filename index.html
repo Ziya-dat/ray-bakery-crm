@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ray Sweet Flavour</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #fffaf0;
+      font-family: 'Quicksand', sans-serif;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .centered {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 60px;
+      color: #5c3b1e;
+      margin-bottom: 50px;
+    }
+
+    .order-box {
+      background-color: #fdd9c2;
+      padding: 25px 50px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      font-size: 26px;
+      font-weight: bold;
+      color: #5a2e1f;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .order-box:hover {
+      transform: scale(1.05);
+      background-color: #fbc9b1;
+    }
+
+    #orderSection {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      padding: 30px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #orderSection.active {
+      display: block;
+    }
+
+    form {
+      background-color: #f9e2cc;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #d6a77a;
+    }
+
+    button {
+      background-color: #eac2a0;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #5a2e1f;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff8ef;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #e0c2b3;
+    }
+
+    th {
+      background-color: #f5cbaa;
+      color: #5a2e1f;
+    }
+
+    .export-btn {
+      margin: 20px auto;
+      display: block;
+      background-color: #f5cbaa;
+      color: #5a2e1f;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .action-btn {
+      background-color: #fdd9c2;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 14px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Welcome Page -->
+  <div id="welcomeSection" class="centered">
+    <h1>Welcome to Ray Sweet Flavour</h1>
+    <div class="order-box" id="openOrderBtn">Open Orders</div>
+  </div>
+
+  <!-- Order Section -->
+  <div id="orderSection">
+    <h1>Customer Orders</h1>
+
+    <form id="orderForm">
+      <label for="name">Customer Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="item">Item Ordered:</label>
+      <input type="text" id="item" required>
+
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" min="1" required>
+
+      <label for="area">Delivery Area:</label>
+      <select id="area" required>
+        <option value="">Select Area</option>
+        <option>Ikeja</option>
+        <option>Yaba</option>
+        <option>Surulere</option>
+        <option>Oshodi</option>
+        <option>Mushin</option>
+        <option>Agege</option>
+        <option>Apapa</option>
+        <option>Gbagada</option>
+        <option>Ogba/Omole/Ojodu</option>
+        <option>Maryland/Mende/Onigbongbo</option>
+        <option>Magodo</option>
+        <option>Oregun/Alausa</option>
+        <option>Badagry</option>
+        <option>Ikorodu</option>
+        <option>Eti-Osa</option>
+        <option>Alimosho</option>
+      </select>
+
+      <label for="address">Exact Address:</label>
+      <input type="text" id="address" required>
+
+      <label for="notes">Notes:</label>
+      <textarea id="notes" rows="3"></textarea>
+
+      <button type="submit">Add Order</button>
+    </form>
+
+    <table id="orderTable">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Area</th>
+          <th>Address</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button class="export-btn" onclick="exportCSV()">Export Orders</button>
+  </div>
+
+  <script>
+    const openOrderBtn = document.getElementById('openOrderBtn');
+    const welcome = document.getElementById('welcomeSection');
+    const orderSection = document.getElementById('orderSection');
+
+    openOrderBtn.addEventListener('click', () => {
+      welcome.style.opacity = 1;
+      welcome.style.transition = 'opacity 0.5s ease-in-out';
+      welcome.style.opacity = 0;
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        orderSection.classList.add('active');
+        orderSection.style.opacity = 1;
+      }, 500);
+    });
+
+    const form = document.getElementById('orderForm');
+    const tableBody = document.querySelector('#orderTable tbody');
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+    function saveOrders() {
+      localStorage.setItem('orders', JSON.stringify(orders));
+    }
+
+    function renderOrders() {
+      tableBody.innerHTML = '';
+      orders.forEach((order, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${order.name}</td>
+          <td>${order.item}</td>
+          <td>${order.quantity}</td>
+          <td>${order.area}</td>
+          <td>${order.address}</td>
+          <td>${order.notes}</td>
+          <td>
+            <button class="action-btn" onclick="editOrder(${index})">Edit</button>
+            <button class="action-btn" onclick="deleteOrder(${index})">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function editOrder(index) {
+      const order = orders[index];
+      document.getElementById('name').value = order.name;
+      document.getElementById('item').value = order.item;
+      document.getElementById('quantity').value = order.quantity;
+      document.getElementById('area').value = order.area;
+      document.getElementById('address').value = order.address;
+      document.getElementById('notes').value = order.notes;
+      orders.splice(index, 1);
+      saveOrders();
+      renderOrders();
+    }
+
+    function deleteOrder(index) {
+      if (confirm("Delete this order?")) {
+        orders.splice(index, 1);
+        saveOrders();
+        renderOrders();
+      }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const newOrder = {
+        name: document.getElementById('name').value.trim(),
+        item: document.getElementById('item').value.trim(),
+        quantity: document.getElementById('quantity').value,
+        area: document.getElementById('area').value,
+        address: document.getElementById('address').value.trim(),
+        notes: document.getElementById('notes').value.trim()
+      };
+
+      orders.push(newOrder);
+      saveOrders();
+      renderOrders();
+      form.reset();
+    });
+
+    function exportCSV() {
+      let csv = "Customer,Item,Quantity,Area,Address,Notes\n";
+      orders.forEach(order => {
+        csv += `"${order.name}","${order.item}",${order.quantity},"${order.area}","${order.address}","${order.notes}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'orders.csv';
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+
+    renderOrders();
+  </script>
+</body>
+</html>
